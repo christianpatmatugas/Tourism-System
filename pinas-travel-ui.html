@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinas Travel — Philippine Tourism Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --lagoon-deep:#0A3D4C;
+    --lagoon:#1C8FAE;
+    --lagoon-light:#A9D9E6;
+    --gold:#E9A23B;
+    --gold-light:#F6D9A8;
+    --palm:#2F9E6E;
+    --palm-light:#BFE6D3;
+    --sand:#FAF6EC;
+    --sand-deep:#F0E9D8;
+    --ink:#17302B;
+    --ink-soft:#4B5F5A;
+    --white:#FFFFFF;
+    --line:#E4DFD0;
+    --radius-card:20px;
+    --radius-chip:100px;
+    --radius-btn:12px;
+    --shadow-sm:0 2px 10px rgba(10,61,76,0.08);
+    --shadow-md:0 10px 30px rgba(10,61,76,0.14);
+    --shadow-lg:0 24px 60px rgba(10,61,76,0.20);
+    --serif:"Fraunces", Georgia, serif;
+    --sans:"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans);
+    background:var(--sand);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  img, .photo{display:block; width:100%; height:100%; object-fit:cover;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+  h1,h2,h3,h4{font-family:var(--serif); font-weight:600; color:var(--ink); letter-spacing:-0.01em;}
+  ::selection{background:var(--gold-light);}
+  :focus-visible{outline:3px solid var(--lagoon); outline-offset:2px; border-radius:4px;}
+
+  /* ---------- Photo placeholders (stand-in for real destination photography) ---------- */
+  .photo{
+    position:relative;
+    background-size:cover;
+    background-position:center;
+    overflow:hidden;
+    display:flex;
+    align-items:flex-end;
+  }
+  .photo::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(10,61,76,0) 40%, rgba(10,61,76,0.55) 100%);
+  }
+  .photo-label{
+    position:relative; z-index:1;
+    color:#fff; font-family:var(--sans); font-weight:600; font-size:13px;
+    padding:14px 16px; letter-spacing:0.02em;
+  }
+  .p-elnido{background:radial-gradient(120% 100% at 20% 0%, #79c9d6 0%, #1c8fae 45%, #0a3d4c 100%);}
+  .p-boracay{background:radial-gradient(120% 100% at 80% 0%, #fdeecb 0%, #a9d9e6 40%, #1c8fae 100%);}
+  .p-bohol{background:radial-gradient(120% 100% at 50% 0%, #cfe8b8 0%, #2f9e6e 55%, #0a3d4c 100%);}
+  .p-siargao{background:radial-gradient(120% 100% at 30% 100%, #0a3d4c 0%, #1c8fae 55%, #79c9d6 100%);}
+  .p-coron{background:radial-gradient(120% 100% at 70% 0%, #a9d9e6 0%, #1c8fae 45%, #06232c 100%);}
+  .p-banaue{background:radial-gradient(120% 100% at 40% 100%, #7a5c2e 0%, #2f9e6e 55%, #0a3d4c 100%);}
+  .p-vigan{background:radial-gradient(120% 100% at 30% 0%, #e9a23b 0%, #b5731f 55%, #3c2414 100%);}
+  .p-cebu{background:radial-gradient(120% 100% at 70% 100%, #f6d9a8 0%, #1c8fae 55%, #0a3d4c 100%);}
+  .p-food{background:radial-gradient(120% 100% at 50% 0%, #f6d9a8 0%, #e9a23b 55%, #7a4a12 100%);}
+  .p-manila{background:radial-gradient(120% 100% at 60% 100%, #0a3d4c 0%, #1c8fae 40%, #79c9d6 100%);}
+  .p-hero{background:radial-gradient(140% 120% at 75% 20%, #79c9d6 0%, #1c8fae 40%, #0a3d4c 78%, #062028 100%);}
+  .p-avatar{background:linear-gradient(160deg, var(--gold-light), var(--palm-light));}
+
+  /* ---------- Layout shell ---------- */
+  .app{max-width:1440px; margin:0 auto; background:var(--white); min-height:100vh; box-shadow:0 0 80px rgba(10,61,76,0.10);}
+  .wrap{max-width:1240px; margin:0 auto; padding:0 40px;}
+  section{padding:88px 0;}
+  .eyebrow-row{display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:36px; flex-wrap:wrap;}
+  .section-title{font-size:34px; line-height:1.15;}
+  .section-sub{color:var(--ink-soft); font-size:16px; max-width:520px; margin-top:8px;}
+  .link-more{font-weight:600; color:var(--lagoon); white-space:nowrap; display:inline-flex; align-items:center; gap:6px;}
+  .link-more svg{transition:transform .18s ease;}
+  .link-more:hover svg{transform:translateX(3px);}
+
+  /* ---------- Top nav (screen switcher) ---------- */
+  .screen-nav{
+    position:sticky; top:0; z-index:50;
+    background:var(--ink); color:var(--sand);
+    display:flex; align-items:center; gap:6px;
+    padding:10px 20px; overflow-x:auto;
+    font-size:13px; font-weight:600;
+  }
+  .screen-nav .tag{
+    font-family:var(--serif); font-weight:600; font-size:15px; color:var(--gold-light);
+    padding-right:16px; margin-right:8px; border-right:1px solid rgba(255,255,255,0.2); white-space:nowrap;
+  }
+  .screen-nav button{
+    padding:8px 14px; border-radius:100px; color:rgba(250,246,236,0.7); white-space:nowrap; flex:none;
+  }
+  .screen-nav button:hover{color:#fff; background:rgba(255,255,255,0.08);}
+  .screen-nav button.active{background:var(--gold); color:var(--ink);}
+
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* ---------- Site header ---------- */
+  header.site{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 40px; border-bottom:1px solid var(--line);
+  }
+  .logo{display:flex; align-items:center; gap:10px; font-family:var(--serif); font-weight:700; font-size:21px; color:var(--ink);}
+  .logo-mark{width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg, var(--gold), var(--palm)); flex:none; position:relative;}
+  .logo-mark::after{content:""; position:absolute; inset:7px; border-radius:6px; background:var(--white); opacity:0.9; clip-path:polygon(50% 0%, 100% 100%, 0% 100%);}
+  nav.primary{display:flex; align-items:center; gap:28px; font-size:14.5px; font-weight:600; color:var(--ink-soft);}
+  nav.primary a:hover{color:var(--lagoon);}
+  .header-actions{display:flex; align-items:center; gap:14px;}
+  .lang-select{font-size:13.5px; font-weight:600; color:var(--ink-soft); display:flex; align-items:center; gap:4px;}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px 22px; border-radius:var(--radius-btn); font-weight:700; font-size:14.5px;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary{background:var(--lagoon-deep); color:#fff;}
+  .btn-primary:hover{background:var(--lagoon); box-shadow:var(--shadow-sm); transform:translateY(-1px);}
+  .btn-gold{background:var(--gold); color:var(--ink);}
+  .btn-gold:hover{transform:translateY(-1px); box-shadow:var(--shadow-sm);}
+  .btn-ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--lagoon); color:var(--lagoon);}
+  .btn-text{color:var(--lagoon); font-weight:700; font-size:14.5px;}
+  .btn-sm{padding:9px 16px; font-size:13.5px;}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative; padding:0;}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; min-height:640px;}
+  .hero-copy{padding:76px 56px 56px; display:flex; flex-direction:column; justify-content:center; background:var(--sand);}
+  .hero-copy h1{font-size:52px; line-height:1.08; letter-spacing:-0.02em; max-width:560px;}
+  .hero-copy p.lede{font-size:17px; color:var(--ink-soft); max-width:460px; margin-top:20px;}
+  .hero-photo{position:relative;}
+  .hero-photo .wave{position:absolute; left:-1px; top:0; bottom:0; width:64px;}
+  .quick-chips{display:flex; flex-wrap:wrap; gap:10px; margin-top:26px;}
+  .quick-chip{
+    padding:8px 16px; border-radius:var(--radius-chip); background:var(--white); border:1.5px solid var(--line);
+    font-size:13.5px; font-weight:600; color:var(--ink-soft);
+  }
+  .quick-chip:hover{border-color:var(--gold); color:var(--ink);}
+
+  .search-panel{
+    margin-top:34px; background:var(--white); border-radius:18px; box-shadow:var(--shadow-lg);
+    padding:10px; display:grid; grid-template-columns:1.3fr 1fr 1fr 0.9fr auto; gap:2px; max-width:640px;
+  }
+  .search-field{padding:12px 16px; border-radius:12px;}
+  .search-field:hover{background:var(--sand);}
+  .search-field label{display:block; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-soft); margin-bottom:3px;}
+  .search-field input,.search-field select{border:none; background:transparent; font:inherit; font-weight:600; font-size:14px; color:var(--ink); width:100%;}
+  .search-btn{
+    display:flex; align-items:center; justify-content:center;
+    background:var(--gold); border-radius:12px; width:52px; height:52px; align-self:center;
+  }
+  .search-btn:hover{background:#dc9530;}
+
+  /* ---------- Destination cards ---------- */
+  .card-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
+  .dest-card{
+    border-radius:var(--radius-card); overflow:hidden; background:var(--white); box-shadow:var(--shadow-sm);
+    transition:box-shadow .2s ease, transform .2s ease; display:flex; flex-direction:column;
+  }
+  .dest-card:hover{box-shadow:var(--shadow-md); transform:translateY(-3px);}
+  .dest-card .photo{height:190px;}
+  .dest-body{padding:18px 18px 20px; display:flex; flex-direction:column; gap:8px; flex:1;}
+  .dest-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .dest-name{font-family:var(--serif); font-weight:600; font-size:18px;}
+  .dest-province{font-size:12.5px; color:var(--ink-soft); font-weight:600;}
+  .rating{display:flex; align-items:center; gap:4px; font-size:13px; font-weight:700; color:var(--ink); flex:none;}
+  .rating svg{width:14px; height:14px; fill:var(--gold);}
+  .dest-desc{font-size:13.5px; color:var(--ink-soft); flex:1;}
+  .dest-meta{display:flex; align-items:center; justify-content:space-between; margin-top:6px; padding-top:12px; border-top:1px solid var(--line);}
+  .dest-meta .count{font-size:12.5px; color:var(--ink-soft); font-weight:600;}
+  .explore-link{font-size:13px; font-weight:700; color:var(--lagoon); display:flex; align-items:center; gap:4px;}
+
+  /* ---------- Regions / map ---------- */
+  .region-panel{
+    display:grid; grid-template-columns:0.85fr 1.15fr; gap:0; border-radius:24px; overflow:hidden; background:var(--lagoon-deep); color:#fff;
+  }
+  .region-tabs{padding:44px 40px;}
+  .region-tab{
+    display:flex; align-items:center; justify-content:space-between; padding:18px 4px; border-bottom:1px solid rgba(255,255,255,0.14);
+    cursor:pointer; color:rgba(250,246,236,0.65);
+  }
+  .region-tab.active{color:#fff;}
+  .region-tab .rname{font-family:var(--serif); font-size:22px; font-weight:600;}
+  .region-tab .rcount{font-size:12.5px; font-weight:600; opacity:0.7;}
+  .region-places{padding:44px 40px; background:rgba(255,255,255,0.05); display:none; flex-wrap:wrap; gap:10px; align-content:flex-start;}
+  .region-places.active{display:flex;}
+  .region-places .chip{padding:10px 18px; border-radius:100px; background:rgba(255,255,255,0.10); font-size:13.5px; font-weight:600; border:1px solid rgba(255,255,255,0.18);}
+  .region-places .chip:hover{background:var(--gold); color:var(--ink); border-color:var(--gold);}
+
+  /* ---------- Categories ---------- */
+  .cat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+  .cat-card{
+    padding:26px 22px; border-radius:18px; background:var(--sand-deep); border:1px solid var(--line);
+    display:flex; flex-direction:column; gap:14px; transition:.18s ease;
+  }
+  .cat-card:hover{background:var(--white); box-shadow:var(--shadow-sm); transform:translateY(-2px);}
+  .cat-icon{width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:var(--white);}
+  .cat-icon svg{width:22px; height:22px; stroke:var(--lagoon-deep);}
+  .cat-name{font-weight:700; font-size:15.5px;}
+  .cat-sub{font-size:12.5px; color:var(--ink-soft);}
+
+  /* ---------- Experience cards ---------- */
+  .exp-scroll{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
+  .exp-card{border-radius:var(--radius-card); overflow:hidden; background:var(--white); box-shadow:var(--shadow-sm);}
+  .exp-card:hover{box-shadow:var(--shadow-md);}
+  .exp-card .photo{height:160px;}
+  .exp-body{padding:16px 18px 20px;}
+  .exp-loc{font-size:12px; font-weight:700; color:var(--palm); text-transform:uppercase; letter-spacing:0.03em;}
+  .exp-title{font-family:var(--serif); font-size:16.5px; font-weight:600; margin-top:6px;}
+  .exp-row{display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px solid var(--line);}
+  .exp-price{font-weight:800; font-size:15px;}
+  .exp-price span{font-weight:500; font-size:11.5px; color:var(--ink-soft);}
+  .exp-duration{font-size:12px; color:var(--ink-soft); font-weight:600;}
+
+  /* ---------- Footer ---------- */
+  footer.site{background:var(--ink); color:rgba(250,246,236,0.75); padding:64px 40px 32px;}
+  .footer-grid{display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:40px; max-width:1240px; margin:0 auto;}
+  footer.site h4{color:#fff; font-family:var(--sans); font-size:13.5px; margin-bottom:16px; font-weight:700;}
+  footer.site ul{list-style:none; display:flex; flex-direction:column; gap:10px; font-size:13.5px;}
+  footer.site .foot-bottom{max-width:1240px; margin:44px auto 0; padding-top:24px; border-top:1px solid rgba(255,255,255,0.12); font-size:12.5px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  /* ---------- Generic screen header (non-Home pages) ---------- */
+  .page-hero{padding:52px 40px 40px; border-bottom:1px solid var(--line); background:var(--sand-deep);}
+  .page-hero h1{font-size:36px;}
+  .page-hero p{color:var(--ink-soft); margin-top:8px; max-width:560px;}
+  .crumb{font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:12px;}
+  .crumb b{color:var(--lagoon);}
+
+  /* ---------- Filters / search page ---------- */
+  .search-layout{display:grid; grid-template-columns:270px 1fr; gap:36px; padding:44px 40px;}
+  .filters{display:flex; flex-direction:column; gap:26px;}
+  .filter-group h4{font-size:13.5px; margin-bottom:12px;}
+  .filter-row{display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--ink-soft); margin-bottom:8px;}
+  .filter-row input[type=checkbox]{width:16px; height:16px; accent-color:var(--lagoon);}
+  .price-track{height:5px; background:var(--line); border-radius:4px; position:relative; margin:16px 4px;}
+  .price-track::after{content:""; position:absolute; left:15%; right:35%; top:0; bottom:0; background:var(--gold); border-radius:4px;}
+  .price-track .dot{position:absolute; width:16px; height:16px; background:#fff; border:3px solid var(--gold); border-radius:50%; top:50%; transform:translateY(-50%);}
+  .results-toolbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
+  .sort-select{padding:9px 14px; border:1.5px solid var(--line); border-radius:100px; font-size:13px; font-weight:600;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+
+  /* ---------- Listing card (hotel / restaurant) ---------- */
+  .list-card{background:var(--white); border-radius:var(--radius-card); overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--line);}
+  .list-card .photo{height:170px;}
+  .list-body{padding:16px 18px 20px;}
+  .amenity-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .amenity{font-size:11px; font-weight:700; color:var(--ink-soft); background:var(--sand-deep); padding:5px 10px; border-radius:100px;}
+  .price-line{display:flex; align-items:baseline; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px solid var(--line);}
+  .price-big{font-family:var(--serif); font-size:20px; font-weight:600;}
+  .price-big span{font-family:var(--sans); font-size:12px; font-weight:600; color:var(--ink-soft);}
+
+  /* ---------- Detail page ---------- */
+  .detail-gallery{display:grid; grid-template-columns:1.6fr 1fr; gap:10px; padding:0 40px; margin-top:24px;}
+  .detail-gallery .photo{border-radius:16px;}
+  .detail-gallery .main{height:420px;}
+  .gallery-side{display:grid; grid-template-rows:1fr 1fr; gap:10px;}
+  .detail-layout{display:grid; grid-template-columns:1fr 340px; gap:48px; padding:48px 40px;}
+  .detail-block{margin-bottom:40px;}
+  .detail-block h3{font-size:21px; margin-bottom:14px;}
+  .detail-block p{color:var(--ink-soft); font-size:15px; max-width:640px;}
+  .info-list{list-style:none; display:flex; flex-direction:column; gap:12px;}
+  .info-list li{display:flex; gap:12px; font-size:14.5px; color:var(--ink-soft);}
+  .info-list b{color:var(--ink); min-width:118px; font-weight:700;}
+  .todo-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .todo-item{display:flex; gap:12px; padding:14px; border:1px solid var(--line); border-radius:14px;}
+  .todo-num{font-family:var(--serif); font-weight:600; font-size:18px; color:var(--palm); flex:none;}
+  .sticky-card{
+    position:sticky; top:70px; background:var(--white); border:1px solid var(--line); border-radius:18px;
+    padding:24px; box-shadow:var(--shadow-sm); height:fit-content;
+  }
+  .budget-row{display:flex; justify-content:space-between; font-size:14px; padding:9px 0; border-bottom:1px dashed var(--line);}
+  .budget-row.total{border-bottom:none; font-weight:800; font-size:15.5px; padding-top:14px;}
+  .weather-strip{display:flex; gap:10px; margin-top:14px;}
+  .weather-day{flex:1; text-align:center; background:var(--sand-deep); border-radius:10px; padding:10px 4px; font-size:11.5px; font-weight:700; color:var(--ink-soft);}
+
+  /* ---------- Itinerary / planner ---------- */
+  .planner-layout{display:grid; grid-template-columns:1fr 320px; gap:40px; padding:48px 40px;}
+  .day-block{margin-bottom:36px; position:relative; padding-left:36px;}
+  .day-block::before{content:""; position:absolute; left:11px; top:34px; bottom:-20px; width:2px; background:var(--line);}
+  .day-block:last-child::before{display:none;}
+  .day-dot{position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:50%; background:var(--lagoon-deep); color:#fff; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center;}
+  .day-title{font-family:var(--serif); font-size:19px; font-weight:600;}
+  .day-sub{font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:2px;}
+  .activity-row{
+    display:grid; grid-template-columns:64px 1fr auto; gap:14px; align-items:center;
+    background:var(--white); border:1px solid var(--line); border-radius:14px; padding:12px 16px; margin-top:12px;
+  }
+  .activity-time{font-size:12.5px; font-weight:700; color:var(--lagoon);}
+  .activity-name{font-weight:700; font-size:14.5px;}
+  .activity-note{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
+  .activity-cost{font-size:13px; font-weight:700; color:var(--ink-soft);}
+  .add-activity{margin-top:12px; padding:12px 16px; border:1.5px dashed var(--line); border-radius:14px; font-size:13.5px; font-weight:700; color:var(--lagoon-deep); width:100%; text-align:left;}
+  .add-activity:hover{border-color:var(--lagoon);}
+
+  /* ---------- Dashboard ---------- */
+  .dash-shell{display:grid; grid-template-columns:250px 1fr; min-height:70vh;}
+  .dash-side{background:var(--sand-deep); border-right:1px solid var(--line); padding:32px 20px; display:flex; flex-direction:column; gap:4px;}
+  .dash-profile{display:flex; align-items:center; gap:12px; padding:0 8px 24px;}
+  .dash-avatar{width:44px; height:44px; border-radius:50%; flex:none;}
+  .dash-name{font-weight:700; font-size:14.5px;}
+  .dash-sub{font-size:12px; color:var(--ink-soft);}
+  .dash-link{padding:11px 14px; border-radius:12px; font-size:14px; font-weight:600; color:var(--ink-soft); display:flex; align-items:center; gap:10px;}
+  .dash-link.active{background:var(--white); color:var(--ink); box-shadow:var(--shadow-sm);}
+  .dash-link:hover{color:var(--ink);}
+  .dash-main{padding:40px;}
+  .welcome-banner{
+    background:linear-gradient(120deg, var(--lagoon-deep), var(--lagoon)); border-radius:20px; padding:36px 40px; color:#fff;
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:36px;
+  }
+  .welcome-banner h2{color:#fff; font-size:26px;}
+  .welcome-banner p{opacity:0.85; margin-top:6px; font-size:14px; max-width:400px;}
+  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:36px;}
+  .stat-card{background:var(--white); border:1px solid var(--line); border-radius:16px; padding:20px;}
+  .stat-num{font-family:var(--serif); font-size:26px; font-weight:600;}
+  .stat-label{font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:4px;}
+  .trip-row{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .trip-card{border-radius:16px; overflow:hidden; border:1px solid var(--line); background:var(--white);}
+  .trip-card .photo{height:120px;}
+  .trip-body{padding:14px 16px 16px;}
+  .trip-dates{font-size:12px; color:var(--ink-soft); font-weight:600; margin-top:4px;}
+  .status-pill{font-size:10.5px; font-weight:800; padding:4px 10px; border-radius:100px; background:var(--palm-light); color:#0f5c3d; letter-spacing:0.02em;}
+
+  /* ---------- Auth ---------- */
+  .auth-shell{display:grid; grid-template-columns:1fr 1fr; min-height:78vh;}
+  .auth-art{position:relative;}
+  .auth-form-wrap{display:flex; align-items:center; justify-content:center; padding:60px;}
+  .auth-form{max-width:380px; width:100%;}
+  .auth-form h2{font-size:30px;}
+  .auth-form p.lede{color:var(--ink-soft); margin-top:8px; font-size:14.5px;}
+  .field{margin-top:18px;}
+  .field label{display:block; font-size:13px; font-weight:700; margin-bottom:7px;}
+  .field input{
+    width:100%; padding:13px 15px; border:1.5px solid var(--line); border-radius:12px; font:inherit; font-size:14.5px;
+  }
+  .field input:focus{border-color:var(--lagoon);}
+  .field-row{display:flex; justify-content:space-between; align-items:center; margin-top:16px; font-size:13px;}
+  .checkbox-row{display:flex; align-items:center; gap:8px; color:var(--ink-soft); font-weight:600;}
+  .divider-row{display:flex; align-items:center; gap:14px; margin:24px 0; color:var(--ink-soft); font-size:12.5px; font-weight:700;}
+  .divider-row::before, .divider-row::after{content:""; flex:1; height:1px; background:var(--line);}
+  .oauth-btn{
+    width:100%; padding:12px; border:1.5px solid var(--line); border-radius:12px; font-weight:700; font-size:14px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .oauth-btn:hover{border-color:var(--ink); }
+  .switch-line{margin-top:22px; text-align:center; font-size:13.5px; color:var(--ink-soft);}
+
+  /* ---------- Admin ---------- */
+  .admin-shell{display:grid; grid-template-columns:230px 1fr; min-height:80vh; background:var(--sand-deep);}
+  .admin-side{background:var(--ink); color:rgba(250,246,236,0.75); padding:26px 16px; display:flex; flex-direction:column; gap:2px;}
+  .admin-logo{color:#fff; font-family:var(--serif); font-weight:600; font-size:17px; padding:6px 10px 22px;}
+  .admin-link{padding:10px 12px; border-radius:10px; font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:10px;}
+  .admin-link.active{background:rgba(255,255,255,0.10); color:#fff;}
+  .admin-link:hover{color:#fff;}
+  .admin-main{padding:32px 36px;}
+  .admin-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:26px;}
+  .admin-stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;}
+  .admin-stat{background:var(--white); border-radius:14px; padding:18px 20px; border:1px solid var(--line);}
+  .admin-stat .num{font-family:var(--serif); font-size:24px; font-weight:600;}
+  .admin-stat .lbl{font-size:12px; color:var(--ink-soft); font-weight:700; margin-top:4px;}
+  .admin-stat .delta{font-size:11.5px; font-weight:700; color:var(--palm); margin-top:6px;}
+  .admin-panels{display:grid; grid-template-columns:1.3fr 1fr; gap:20px;}
+  .panel{background:var(--white); border-radius:16px; border:1px solid var(--line); padding:22px;}
+  .panel h4{font-size:15px; margin-bottom:16px;}
+  .bar-chart{display:flex; align-items:flex-end; gap:10px; height:150px;}
+  .bar{flex:1; background:linear-gradient(180deg, var(--lagoon), var(--lagoon-deep)); border-radius:6px 6px 0 0; position:relative;}
+  .bar span{position:absolute; bottom:-20px; left:0; right:0; text-align:center; font-size:10.5px; color:var(--ink-soft); font-weight:700;}
+  table.admin-table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  table.admin-table th{text-align:left; font-size:11.5px; color:var(--ink-soft); font-weight:700; padding:8px 6px; border-bottom:1px solid var(--line);}
+  table.admin-table td{padding:11px 6px; border-bottom:1px solid var(--line);}
+  .row-dest{display:flex; align-items:center; gap:10px;}
+  .row-thumb{width:32px; height:32px; border-radius:8px; flex:none;}
+  .tag-status{font-size:10.5px; font-weight:800; padding:3px 9px; border-radius:100px;}
+  .tag-status.active{background:var(--palm-light); color:#0f5c3d;}
+  .tag-status.pending{background:var(--gold-light); color:#8a5a12;}
+
+  /* ---------- Travel guides ---------- */
+  .guide-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:24px;}
+  .guide-card{border-radius:var(--radius-card); overflow:hidden; position:relative; box-shadow:var(--shadow-sm);}
+  .guide-card .photo{height:100%;}
+  .guide-card.feature{grid-row:span 2;}
+  .guide-card.feature .photo{height:520px;}
+  .guide-card:not(.feature) .photo{height:248px;}
+  .guide-tag{position:absolute; top:16px; left:16px; z-index:2; background:rgba(255,255,255,0.92); color:var(--ink); font-size:11px; font-weight:800; padding:6px 12px; border-radius:100px;}
+  .guide-title{position:relative; z-index:1; font-family:var(--serif); color:#fff; font-size:22px; font-weight:600; padding:22px; max-width:80%;}
+  .guide-card.feature .guide-title{font-size:28px;}
+
+  /* ---------- Design system page ---------- */
+  .ds-swatch-row{display:flex; gap:16px; flex-wrap:wrap;}
+  .swatch{width:120px;}
+  .swatch-color{height:80px; border-radius:12px; margin-bottom:8px; border:1px solid rgba(0,0,0,0.06);}
+  .swatch-name{font-size:12px; font-weight:700;}
+  .swatch-hex{font-size:11px; color:var(--ink-soft);}
+  .type-row{display:flex; align-items:baseline; gap:20px; padding:16px 0; border-bottom:1px solid var(--line);}
+  .type-row .label{width:110px; font-size:12px; color:var(--ink-soft); font-weight:700; flex:none;}
+  .comp-row{display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+
+  /* ---------- Mobile screens ---------- */
+  .mobile-strip{display:flex; gap:36px; padding:48px 40px; overflow-x:auto; align-items:flex-start;}
+  .phone{width:320px; flex:none; border-radius:34px; border:8px solid var(--ink); background:var(--white); overflow:hidden; box-shadow:var(--shadow-lg);}
+  .phone-screen{height:640px; overflow:hidden; position:relative; display:flex; flex-direction:column;}
+  .phone-topbar{padding:14px 18px 10px; display:flex; align-items:center; justify-content:space-between;}
+  .phone-hero .photo{height:220px;}
+  .phone-search{margin:-24px 16px 0; background:#fff; border-radius:14px; box-shadow:var(--shadow-md); padding:14px; position:relative; z-index:2;}
+  .phone-search .sf{font-size:11px; font-weight:700; color:var(--ink-soft);}
+  .phone-body{padding:18px 16px; flex:1; overflow:hidden;}
+  .phone-cards{display:flex; gap:12px; overflow:hidden;}
+  .phone-card{width:150px; flex:none; border-radius:14px; overflow:hidden; border:1px solid var(--line);}
+  .phone-card .photo{height:100px;}
+  .phone-card .pc-body{padding:10px;}
+  .phone-tabbar{display:flex; border-top:1px solid var(--line); padding:10px 8px 14px;}
+  .phone-tab{flex:1; text-align:center; font-size:10px; font-weight:700; color:var(--ink-soft);}
+  .phone-tab.active{color:var(--lagoon-deep);}
+  .phone-cat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:16px;}
+  .phone-cat{background:var(--sand-deep); border-radius:10px; padding:10px 6px; text-align:center; font-size:9.5px; font-weight:700;}
+  .phone-caption{text-align:center; font-size:13px; font-weight:700; color:var(--ink-soft); margin-top:14px;}
+
+  @media (max-width: 1100px){
+    .hero-grid{grid-template-columns:1fr;}
+    .card-grid, .exp-scroll, .grid-3, .cat-grid{grid-template-columns:repeat(2,1fr);}
+    .region-panel{grid-template-columns:1fr;}
+    .detail-layout, .planner-layout, .search-layout{grid-template-columns:1fr;}
+    .dash-shell, .admin-shell{grid-template-columns:1fr;}
+    .guide-grid{grid-template-columns:1fr 1fr;}
+    .guide-card.feature{grid-row:span 1;}
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-nav" id="screenNav">
+  <span class="tag">Pinas Travel — UI Screens</span>
+  <button data-screen="home" class="active">Home</button>
+  <button data-screen="explore">Search &amp; Explore</button>
+  <button data-screen="detail">Destination Details</button>
+  <button data-screen="stay">Accommodations</button>
+  <button data-screen="eat">Restaurants</button>
+  <button data-screen="guides">Travel Guides</button>
+  <button data-screen="planner">Trip Planner</button>
+  <button data-screen="dashboard">User Dashboard</button>
+  <button data-screen="auth">Login / Sign Up</button>
+  <button data-screen="admin">Admin Dashboard</button>
+  <button data-screen="mobile">Mobile Screens</button>
+  <button data-screen="ds">Design System</button>
+</div>
+
+<div class="app">
+
+  <!-- ============ HEADER (shared look, shown on Home) ============ -->
+  <header class="site" id="siteHeader">
+    <div class="logo"><span class="logo-mark"></span>Pinas Travel</div>
+    <nav class="primary">
+      <a href="#">Home</a>
+      <a href="#">Explore</a>
+      <a href="#">Destinations</a>
+      <a href="#">Activities</a>
+      <a href="#">Accommodations</a>
+      <a href="#">Restaurants</a>
+      <a href="#">Travel Guides</a>
+      <a href="#">About</a>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-select">EN
+        <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" stroke="#4B5F5A" stroke-width="1.4" fill="none"/></svg>
+      </div>
+      <a class="btn-text">Log in</a>
+      <a class="btn btn-primary btn-sm">Sign up</a>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: HOME -->
+  <!-- ============================================================ -->
+  <section class="screen active" id="screen-home" style="padding:0;">
+
+    <div class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1>Discover the beauty of the Philippines</h1>
+          <p class="lede">Explore breathtaking destinations, unforgettable experiences, and hidden gems across 7,641 islands — from limestone lagoons to rice terraces carved into the clouds.</p>
+
+          <div class="search-panel">
+            <div class="search-field">
+              <label>Where to</label>
+              <input type="text" placeholder="El Nido, Palawan" />
+            </div>
+            <div class="search-field">
+              <label>Travel dates</label>
+              <input type="text" placeholder="Add dates" />
+            </div>
+            <div class="search-field">
+              <label>Activity</label>
+              <input type="text" placeholder="Island hopping" />
+            </div>
+            <div class="search-field">
+              <label>Travelers</label>
+              <input type="text" placeholder="2 adults" />
+            </div>
+            <button class="search-btn" aria-label="Search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#17302B" stroke-width="2.2"/><line x1="21" y1="21" x2="16.6" y2="16.6" stroke="#17302B" stroke-width="2.2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <div class="quick-chips">
+            <span style="font-size:13px; font-weight:700; color:var(--ink-soft); align-self:center; margin-right:2px;">Popular:</span>
+            <a class="quick-chip">Palawan</a>
+            <a class="quick-chip">Boracay</a>
+            <a class="quick-chip">Cebu</a>
+            <a class="quick-chip">Siargao</a>
+            <a class="quick-chip">Bohol</a>
+            <a class="quick-chip">Banaue</a>
+          </div>
+        </div>
+        <div class="hero-photo photo p-hero">
+          <span class="photo-label">Big Lagoon, El Nido — Palawan</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popular Destinations -->
+    <section class="wrap">
+      <div class="eyebrow-row">
+        <div>
+          <h2 class="section-title">Explore popular destinations</h2>
+          <p class="section-sub">The islands and towns travelers keep coming back to, picked for their landscapes, culture, and things to do.</p>
+        </div>
+        <a class="link-more">See all destinations
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="card-grid">
+
+        <div class="dest-card">
+          <div class="photo p-elnido"><span class="photo-label">El Nido, Palawan</span></div>
+          <div class="dest-body">
+            <div class="dest-top">
+              <div><div class="dest-name">El Nido</div><div class="dest-province">Palawan</div></div>
+              <div class="rating"><svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>4.9</div>
+            </div>
+            <p class="dest-desc">Limestone cliffs, hidden lagoons, and island-hopping tours across the Bacuit archipelago.</p>
+            <div class="dest-meta"><span class="count">42 attractions</span><a class="explore-link">Explore →</a></div>
+          </div>
+        </div>
+
+        <div class="dest-card">
+          <div class="photo p-coron"><span class="photo-label">Coron, Palawan</span></div>
+          <div class="dest-body">
+            <div class="dest-top">
+              <div><div class="dest-name">Coron</div><div class="dest-province">Palawan</div></div>
+              <div class="rating"><svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>4.8</div>
+            </div>
+            <p class="dest-desc">World-class wreck diving and the turquoise waters of Kayangan Lake.</p>
+            <div class="dest-meta"><span class="count">31 attractions</span><a class="explore-link">Explore →</a></div>
+          </div>
+        </div>
+
+        <div class="dest-card">
+          <div class="photo p-boracay"><span class="photo-label">Boracay, Aklan</span></div>
+          <div class="dest-body">
+            <div class="dest-top">
+              <div><div class="dest-name">Boracay</div><div class="dest-province">Aklan</div></div>
+              <div class="rating"><svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>4.7</div>
+            </div>
+            <p class="dest-desc">Powder-white sand along a four-kilometer stretch, famous for its sunsets.</p>
+            <div class="dest-meta"><span class="count">28 attractions</span><a class="explore-link">Explore →</a></div>
+          </div>
+        </div>
+
+        <div class="dest-card">
+          <div class="photo p-siargao"><span class="photo-label">Siargao, Surigao del Norte</span></div>
+          <div class="dest-body">
+            <div class="dest-top">
+              <div><div class="dest-name">Siargao</div><div class="dest-province">Surigao del Norte</div></div>
+              <div class="rating"><svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>4.9</div>
+            </div>
+            <p class="dest-desc">The country's surfing capital, home to the legendary Cloud 9 break.</p>
+            <div class="dest-meta"><span class="count">19 attractions</span><a class="explore-link">Explore →</a></div>
+          </div>
+        </div>
+
+        <div class="dest-card">
+          <div class="photo p-bohol"><span class="photo-label">Bohol</span></div>
+          <div class="dest-body">
+            <div class="dest-top">
+              <div><div class="dest-name">Bohol</div><div class="dest-province">Central Visayas</div></div>
+              <div class="rating"><svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>4.8</div>
+            </div>
+            <p class="dest-desc">Home to the Chocolate Hills and the world's smallest primate, the tarsier.</p>
+            <div class="dest-meta"><span class="count">24 attractions</span><a class="explore-link">Explore →</a></div>
+          </div>
+        </div>
+
+        <div class="dest-card">
+          <div class="photo p-cebu"><span class="photo-label">Cebu</span></div>
+          <div class="dest-body">
+            <div class="dest-top">
+              <div><div class="dest-name">Cebu</div><div class="dest-province">Central Visayas</div></div>
+              <div class="rating"><svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>4.7</div>
+            </div>
+            <p class="dest-desc">Waterfall canyoneering at Kawasan Falls and swimming with whale sharks.</p>
+            <div class="dest-meta"><span class="count">36 attractions</span><a class="explore-link">Explore →</a></div>
+          </div>
+        </div>
+
+        <div class="dest-card">
+          <div class="photo p-banaue"><span class="photo-label">Banaue, Ifugao</span></div>
+          <div class="dest-body">
+            <div class="dest-top">
+              <div><div class="dest-name">Banaue</div><div class="dest-province">Ifugao</div></div>
+              <div class="rating"><svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>4.9</div>
+            </div>
+            <p class="dest-desc">2,000-year-old rice terraces carved into the mountainside by the Ifugao people.</p>
+            <div class="dest-meta"><span class="count">12 attractions</span><a class="explore-link">Explore →</a></div>
+          </div>
+        </div>
+
+        <div class="dest-card">
+          <div class="photo p-vigan"><span class="photo-label">Vigan, Ilocos Sur</span></div>
+          <div class="dest-body">
+            <div class="dest-top">
+              <div><div class="dest-name">Vigan</div><div class="dest-province">Ilocos Sur</div></div>
+              <div class="rating"><svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z"/></svg>4.6</div>
+            </div>
+            <p class="dest-desc">Cobblestone streets and Spanish colonial houses along Calle Crisologo.</p>
+            <div class="dest-meta"><span class="count">16 attractions</span><a class="explore-link">Explore →</a></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Explore the Philippines / regions -->
+    <section class="wrap">
+      <div class="eyebrow-row">
+        <div>
+          <h2 class="section-title">Explore by region</h2>
+          <p class="section-sub">The archipelago in three parts — pick a region to see where travelers go.</p>
+        </div>
+      </div>
+      <div class="region-panel">
+        <div class="region-tabs">
+          <div class="region-tab active" data-region="luzon">
+            <div><div class="rname">Luzon</div><div class="rcount">Manila · Baguio · Banaue · Vigan · Batangas</div></div>
+          </div>
+          <div class="region-tab" data-region="visayas">
+            <div><div class="rname">Visayas</div><div class="rcount">Cebu · Bohol · Boracay · Iloilo · Siquijor</div></div>
+          </div>
+          <div class="region-tab" data-region="mindanao">
+            <div><div class="rname">Mindanao</div><div class="rcount">Siargao · Davao · Camiguin · Cagayan de Oro</div></div>
+          </div>
+        </div>
+        <div class="region-places active" data-region="luzon">
+          <span class="chip">Manila</span><span class="chip">Baguio</span><span class="chip">Banaue</span><span class="chip">Vigan</span><span class="chip">Batangas</span><span class="chip">Tagaytay</span><span class="chip">Sagada</span>
+        </div>
+        <div class="region-places" data-region="visayas">
+          <span class="chip">Cebu</span><span class="chip">Bohol</span><span class="chip">Boracay</span><span class="chip">Iloilo</span><span class="chip">Siquijor</span><span class="chip">Bacolod</span>
+        </div>
+        <div class="region-places" data-region="mindanao">
+          <span class="chip">Siargao</span><span class="chip">Davao</span><span class="chip">Camiguin</span><span class="chip">Cagayan de Oro</span><span class="chip">Zamboanga</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="wrap">
+      <div class="eyebrow-row"><div><h2 class="section-title">Browse by category</h2></div></div>
+      <div class="cat-grid">
+        <div class="cat-card"><div class="cat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M2 20c3-3 6-3 9 0s6 3 9 0M4 14l6-9 6 9M2 20V9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="cat-name">Beaches</div><div class="cat-sub">White sand &amp; island hopping</div></div></div>
+        <div class="cat-card"><div class="cat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 20l6-11 4 7 3-5 5 9H3z" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div><div class="cat-name">Mountains</div><div class="cat-sub">Peaks, treks &amp; rice terraces</div></div></div>
+        <div class="cat-card"><div class="cat-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke-width="1.8"/><path d="M8 12c1.5-2 6.5-2 8 0" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><div class="cat-name">Island Hopping</div><div class="cat-sub">Lagoons, reefs &amp; boat tours</div></div></div>
+        <div class="cat-card"><div class="cat-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="10" stroke-width="1.8"/><path d="M9 10V6a3 3 0 016 0v4" stroke-width="1.8"/></svg></div><div><div class="cat-name">Historical Sites</div><div class="cat-sub">Heritage towns &amp; landmarks</div></div></div>
+        <div class="cat-card"><div class="cat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c3 4 6 6 6 10a6 6 0 01-12 0c0-4 3-6 6-10z" stroke-width="1.8"/></svg></div><div><div class="cat-name">Nature &amp; Adventure</div><div class="cat-sub">Falls, caves &amp; canyoneering</div></div></div>
+        <div class="cat-card"><div class="cat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3v7a3 3 0 006 0V3M9 10v11M17 3c-2 2-2 5 0 7v8" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><div class="cat-name">Food &amp; Culture</div><div class="cat-sub">Local dishes &amp; traditions</div></div></div>
+        <div class="cat-card"><div class="cat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 21V9l8-6 8 6v12M9 21v-6h6v6" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div><div class="cat-name">Hotels &amp; Resorts</div><div class="cat-sub">Stays for every budget</div></div></div>
+        <div class="cat-card"><div class="cat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div><div class="cat-name">Festivals</div><div class="cat-sub">Sinulog, Ati-Atihan &amp; more</div></div></div>
+      </div>
+    </section>
+
+    <!-- Featured Experiences -->
+    <section class="wrap">
+      <div class="eyebrow-row">
+        <div><h2 class="section-title">Featured experiences</h2><p class="section-sub">Book activities led by local guides, from diving to heritage walks.</p></div>
+        <a class="link-more">Browse all activities <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="exp-scroll">
+        <div class="exp-card">
+          <div class="photo p-elnido"><span class="photo-label"></span></div>
+          <div class="exp-body">
+            <div class="exp-loc">El Nido</div>
+            <div class="exp-title">Island Hopping Tour A</div>
+            <div class="exp-row"><div class="exp-price">₱1,200<span> /person</span></div><div class="exp-duration">Full day</div></div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="photo p-coron"><span class="photo-label"></span></div>
+          <div class="exp-body">
+            <div class="exp-loc">Coron</div>
+            <div class="exp-title">Wreck Scuba Diving</div>
+            <div class="exp-row"><div class="exp-price">₱3,500<span> /person</span></div><div class="exp-duration">6 hours</div></div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="photo p-bohol"><span class="photo-label"></span></div>
+          <div class="exp-body">
+            <div class="exp-loc">Bohol</div>
+            <div class="exp-title">Chocolate Hills Tour</div>
+            <div class="exp-row"><div class="exp-price">₱950<span> /person</span></div><div class="exp-duration">Half day</div></div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="photo p-cebu"><span class="photo-label"></span></div>
+          <div class="exp-body">
+            <div class="exp-loc">Cebu</div>
+            <div class="exp-title">Kawasan Falls Canyoneering</div>
+            <div class="exp-row"><div class="exp-price">₱1,800<span> /person</span></div><div class="exp-duration">Full day</div></div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="photo p-siargao"><span class="photo-label"></span></div>
+          <div class="exp-body">
+            <div class="exp-loc">Siargao</div>
+            <div class="exp-title">Surf Lesson at Cloud 9</div>
+            <div class="exp-row"><div class="exp-price">₱1,000<span> /person</span></div><div class="exp-duration">2 hours</div></div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="photo p-banaue"><span class="photo-label"></span></div>
+          <div class="exp-body">
+            <div class="exp-loc">Banaue</div>
+            <div class="exp-title">Rice Terraces Trek</div>
+            <div class="exp-row"><div class="exp-price">₱1,400<span> /person</span></div><div class="exp-duration">Full day</div></div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="photo p-vigan"><span class="photo-label"></span></div>
+          <div class="exp-body">
+            <div class="exp-loc">Vigan</div>
+            <div class="exp-title">Heritage Walking Tour</div>
+            <div class="exp-row"><div class="exp-price">₱600<span> /person</span></div><div class="exp-duration">3 hours</div></div>
+          </div>
+        </div>
+        <div class="exp-card">
+          <div class="photo p-manila"><span class="photo-label"></span></div>
+          <div class="exp-body">
+            <div class="exp-loc">Manila</div>
+            <div class="exp-title">Intramuros Cultural Tour</div>
+            <div class="exp-row"><div class="exp-price">₱750<span> /person</span></div><div class="exp-duration">Half day</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site">
+      <div class="footer-grid">
+        <div>
+          <div class="logo" style="color:#fff; margin-bottom:14px;"><span class="logo-mark"></span>Pinas Travel</div>
+          <p style="font-size:13.5px; max-width:280px;">Helping travelers discover the Philippines — one island, one town, one dish at a time.</p>
+        </div>
+        <div><h4>Explore</h4><ul><li>Destinations</li><li>Activities</li><li>Accommodations</li><li>Restaurants</li></ul></div>
+        <div><h4>Company</h4><ul><li>About us</li><li>Travel guides</li><li>Careers</li><li>Contact</li></ul></div>
+        <div><h4>Support</h4><ul><li>Help center</li><li>Safety</li><li>Terms of service</li><li>Privacy policy</li></ul></div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Pinas Travel. All rights reserved.</span>
+        <span>Made for travelers exploring the Philippines 🇵🇭</span>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: SEARCH & EXPLORE -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-explore">
+    <div class="page-hero">
+      <div class="crumb">Home / <b>Search &amp; Explore</b></div>
+      <h1>Search &amp; explore</h1>
+      <p>Filter by location, price, rating, and activity type to find exactly what you're looking for.</p>
+    </div>
+    <div class="search-layout">
+      <aside class="filters">
+        <div class="filter-group">
+          <h4>Location</h4>
+          <div class="filter-row"><input type="checkbox" checked><span>Palawan</span></div>
+          <div class="filter-row"><input type="checkbox"><span>Cebu</span></div>
+          <div class="filter-row"><input type="checkbox"><span>Bohol</span></div>
+          <div class="filter-row"><input type="checkbox"><span>Siargao</span></div>
+          <div class="filter-row"><input type="checkbox"><span>Aklan (Boracay)</span></div>
+        </div>
+        <div class="filter-group">
+          <h4>Price range</h4>
+          <div class="price-track"><div class="dot" style="left:15%"></div><div class="dot" style="left:65%"></div></div>
+          <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--ink-soft); font-weight:600;"><span>₱500</span><span>₱8,000+</span></div>
+        </div>
+        <div class="filter-group">
+          <h4>Rating</h4>
+          <div class="filter-row"><input type="checkbox"><span>4.5 &amp; up</span></div>
+          <div class="filter-row"><input type="checkbox"><span>4.0 &amp; up</span></div>
+          <div class="filter-row"><input type="checkbox"><span>3.5 &amp; up</span></div>
+        </div>
+        <div class="filter-group">
+          <h4>Activity type</h4>
+          <div class="filter-row"><input type="checkbox" checked><span>Island hopping</span></div>
+          <div class="filter-row"><input type="checkbox"><span>Diving &amp; snorkeling</span></div>
+          <div class="filter-row"><input type="checkbox"><span>Hiking &amp; trekking</span></div>
+          <div class="filter-row"><input type="checkbox"><span>Cultural tours</span></div>
+        </div>
+        <div class="filter-group">
+          <h4>Availability</h4>
+          <div class="filter-row"><input type="checkbox"><span>Available this week</span></div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:6px;">Apply filters</button>
+      </aside>
+      <div>
+        <div class="results-toolbar">
+          <span style="font-size:14.5px; font-weight:700;">128 results for "Palawan"</span>
+          <select class="sort-select">
+            <option>Recommended</option>
+            <option>Highest Rated</option>
+            <option>Most Popular</option>
+            <option>Lowest Price</option>
+          </select>
+        </div>
+        <div class="grid-3">
+          <div class="dest-card"><div class="photo p-elnido"><span class="photo-label">El Nido</span></div><div class="dest-body"><div class="dest-top"><div><div class="dest-name">El Nido Lagoon Tour</div><div class="dest-province">Palawan</div></div><div class="rating">★ 4.9</div></div><p class="dest-desc">Big &amp; Small Lagoon, Secret Beach, Shimizu Island.</p><div class="dest-meta"><span class="count">₱1,200 /person</span><a class="explore-link">View →</a></div></div></div>
+          <div class="dest-card"><div class="photo p-coron"><span class="photo-label">Coron</span></div><div class="dest-body"><div class="dest-top"><div><div class="dest-name">Coron Wreck Diving</div><div class="dest-province">Palawan</div></div><div class="rating">★ 4.8</div></div><p class="dest-desc">WWII Japanese shipwrecks in crystal-clear water.</p><div class="dest-meta"><span class="count">₱3,500 /person</span><a class="explore-link">View →</a></div></div></div>
+          <div class="dest-card"><div class="photo p-elnido"><span class="photo-label">Palawan</span></div><div class="dest-body"><div class="dest-top"><div><div class="dest-name">Puerto Princesa River</div><div class="dest-province">Palawan</div></div><div class="rating">★ 4.7</div></div><p class="dest-desc">Underground river tour, a UNESCO World Heritage Site.</p><div class="dest-meta"><span class="count">₱900 /person</span><a class="explore-link">View →</a></div></div></div>
+          <div class="dest-card"><div class="photo p-boracay"><span class="photo-label">Boracay</span></div><div class="dest-body"><div class="dest-top"><div><div class="dest-name">Boracay Sunset Sail</div><div class="dest-province">Aklan</div></div><div class="rating">★ 4.6</div></div><p class="dest-desc">Paraw sailboat cruise along White Beach at golden hour.</p><div class="dest-meta"><span class="count">₱800 /person</span><a class="explore-link">View →</a></div></div></div>
+          <div class="dest-card"><div class="photo p-bohol"><span class="photo-label">Bohol</span></div><div class="dest-body"><div class="dest-top"><div><div class="dest-name">Loboc River Cruise</div><div class="dest-province">Bohol</div></div><div class="rating">★ 4.5</div></div><p class="dest-desc">Floating lunch buffet with live acoustic music.</p><div class="dest-meta"><span class="count">₱650 /person</span><a class="explore-link">View →</a></div></div></div>
+          <div class="dest-card"><div class="photo p-siargao"><span class="photo-label">Siargao</span></div><div class="dest-body"><div class="dest-top"><div><div class="dest-name">Siargao Island Hopping</div><div class="dest-province">Surigao del Norte</div></div><div class="rating">★ 4.8</div></div><p class="dest-desc">Naked Island, Daku Island, and Guyam Island in one day.</p><div class="dest-meta"><span class="count">₱1,300 /person</span><a class="explore-link">View →</a></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: DESTINATION DETAILS -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-detail">
+    <div class="page-hero" style="padding-bottom:0; border-bottom:none;">
+      <div class="crumb">Destinations / Palawan / <b>El Nido</b></div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+        <div>
+          <h1>El Nido, Palawan</h1>
+          <p style="margin-top:6px;">★ 4.9 (2,340 reviews) · Bacuit Bay, Northern Palawan</p>
+        </div>
+        <button class="btn btn-gold">+ Add to Trip</button>
+      </div>
+    </div>
+    <div class="detail-gallery">
+      <div class="photo p-elnido main"><span class="photo-label"></span></div>
+      <div class="gallery-side">
+        <div class="photo p-coron"><span class="photo-label"></span></div>
+        <div class="photo p-boracay"><span class="photo-label">+18 more photos</span></div>
+      </div>
+    </div>
+    <div class="detail-layout">
+      <div>
+        <div class="detail-block">
+          <h3>About El Nido</h3>
+          <p>El Nido sits at the northern tip of Palawan, framed by dramatic limestone karsts rising straight out of turquoise water. It's the gateway to the Bacuit archipelago's hidden lagoons, secret beaches, and some of the best island-hopping in the country.</p>
+        </div>
+        <div class="detail-block">
+          <h3>Things to do</h3>
+          <div class="todo-grid">
+            <div class="todo-item"><div class="todo-num">01</div><div><b>Island Hopping Tour A</b><p style="font-size:13px; margin-top:2px;">Big Lagoon, Small Lagoon, Secret Beach, Shimizu Island.</p></div></div>
+            <div class="todo-item"><div class="todo-num">02</div><div><b>Nacpan Beach</b><p style="font-size:13px; margin-top:2px;">A four-kilometer stretch of golden sand, quieter than the town proper.</p></div></div>
+            <div class="todo-item"><div class="todo-num">03</div><div><b>Taraw Cliff Trek</b><p style="font-size:13px; margin-top:2px;">A steep climb rewarded with a panoramic view of the bay.</p></div></div>
+            <div class="todo-item"><div class="todo-num">04</div><div><b>Snorkeling at Snake Island</b><p style="font-size:13px; margin-top:2px;">A sandbar connecting to a small island, ringed with coral.</p></div></div>
+          </div>
+        </div>
+        <div class="detail-block">
+          <h3>Recommended restaurants</h3>
+          <div class="grid-3" style="grid-template-columns:repeat(3,1fr);">
+            <div class="list-card"><div class="photo p-food"><span class="photo-label">Trattoria Altrove</span></div><div class="list-body"><b style="font-size:14px;">Trattoria Altrove</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Italian · ★ 4.6</div></div></div>
+            <div class="list-card"><div class="photo p-food"><span class="photo-label">Artcafe El Nido</span></div><div class="list-body"><b style="font-size:14px;">Artcafe El Nido</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Filipino, Seafood · ★ 4.7</div></div></div>
+            <div class="list-card"><div class="photo p-food"><span class="photo-label">Republika</span></div><div class="list-body"><b style="font-size:14px;">Republika Restobar</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Filipino · ★ 4.5</div></div></div>
+          </div>
+        </div>
+        <div class="detail-block">
+          <h3>Hotels &amp; accommodations</h3>
+          <div class="grid-3" style="grid-template-columns:repeat(3,1fr);">
+            <div class="list-card"><div class="photo p-elnido"><span class="photo-label">Lagen Island Resort</span></div><div class="list-body"><b style="font-size:14px;">Lagen Island Resort</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Resort · ₱18,500/night</div></div></div>
+            <div class="list-card"><div class="photo p-boracay"><span class="photo-label">Cauayan Eco Lodge</span></div><div class="list-body"><b style="font-size:14px;">Cauayan Eco Lodge</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Eco lodge · ₱6,200/night</div></div></div>
+            <div class="list-card"><div class="photo p-coron"><span class="photo-label">Spin Designer Hostel</span></div><div class="list-body"><b style="font-size:14px;">Spin Designer Hostel</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Hostel · ₱950/night</div></div></div>
+          </div>
+        </div>
+        <div class="detail-block">
+          <h3>Travel tips</h3>
+          <p>Bring reef-safe sunscreen — regular sunscreen is discouraged near the marine sanctuaries. Environmental fees (₱200) are collected on arrival and cover several island-hopping stops. Cash is still preferred outside the town center.</p>
+        </div>
+      </div>
+      <aside class="sticky-card">
+        <h4 style="font-size:15px; margin-bottom:14px;">Trip planning info</h4>
+        <ul class="info-list">
+          <li><b>Getting there</b> 1hr flight from Manila to El Nido, or 5–6hr van from Puerto Princesa.</li>
+          <li><b>Best time</b> November – May (dry season)</li>
+          <li><b>Est. budget</b> ₱3,500 – ₱6,000/day</li>
+        </ul>
+        <div style="margin-top:18px;">
+          <div class="budget-row"><span>Accommodation</span><span>₱2,500</span></div>
+          <div class="budget-row"><span>Food</span><span>₱800</span></div>
+          <div class="budget-row"><span>Activities</span><span>₱1,200</span></div>
+          <div class="budget-row total"><span>Total / day</span><span>₱4,500</span></div>
+        </div>
+        <div class="weather-strip">
+          <div class="weather-day">MON<br>31°</div>
+          <div class="weather-day">TUE<br>30°</div>
+          <div class="weather-day">WED<br>31°</div>
+          <div class="weather-day">THU<br>29°</div>
+        </div>
+        <button class="btn btn-primary" style="width:100%; margin-top:20px;">+ Add to Trip</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: ACCOMMODATIONS -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-stay">
+    <div class="page-hero">
+      <div class="crumb">Home / <b>Accommodations</b></div>
+      <h1>Hotels &amp; resorts</h1>
+      <p>Beach resorts, hotels, hostels, villas and homestays across the Philippines — for every budget.</p>
+    </div>
+    <div class="wrap" style="padding-top:44px;">
+      <div class="quick-chips" style="margin-bottom:30px;">
+        <a class="quick-chip" style="background:var(--ink); color:#fff;">All</a>
+        <a class="quick-chip">Beach resorts</a>
+        <a class="quick-chip">Hotels</a>
+        <a class="quick-chip">Hostels</a>
+        <a class="quick-chip">Villas</a>
+        <a class="quick-chip">Homestays</a>
+      </div>
+      <div class="grid-3">
+        <div class="list-card">
+          <div class="photo p-boracay"><span class="photo-label">Boracay, Aklan</span></div>
+          <div class="list-body">
+            <b style="font-size:15.5px; font-family:var(--serif);">Shangri-La Boracay Resort</b>
+            <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">★ 4.8 · Beach resort</div>
+            <div class="amenity-row"><span class="amenity">Pool</span><span class="amenity">Spa</span><span class="amenity">Beachfront</span></div>
+            <div class="price-line"><div class="price-big">₱14,900<span>/night</span></div><a class="btn btn-ghost btn-sm">View Details</a></div>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="photo p-elnido"><span class="photo-label">El Nido, Palawan</span></div>
+          <div class="list-body">
+            <b style="font-size:15.5px; font-family:var(--serif);">El Nido Cauayan Lodge</b>
+            <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">★ 4.6 · Eco lodge</div>
+            <div class="amenity-row"><span class="amenity">Breakfast</span><span class="amenity">Garden</span><span class="amenity">Free Wi-Fi</span></div>
+            <div class="price-line"><div class="price-big">₱6,200<span>/night</span></div><a class="btn btn-ghost btn-sm">View Details</a></div>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="photo p-siargao"><span class="photo-label">Siargao</span></div>
+          <div class="list-body">
+            <b style="font-size:15.5px; font-family:var(--serif);">Cloud 9 Surf Camp</b>
+            <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">★ 4.7 · Hostel</div>
+            <div class="amenity-row"><span class="amenity">Surfboards</span><span class="amenity">Bar</span><span class="amenity">Dorms</span></div>
+            <div class="price-line"><div class="price-big">₱850<span>/night</span></div><a class="btn btn-ghost btn-sm">View Details</a></div>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="photo p-bohol"><span class="photo-label">Bohol</span></div>
+          <div class="list-body">
+            <b style="font-size:15.5px; font-family:var(--serif);">Amorita Resort</b>
+            <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">★ 4.9 · Beach resort</div>
+            <div class="amenity-row"><span class="amenity">Cliffside</span><span class="amenity">Infinity pool</span><span class="amenity">Spa</span></div>
+            <div class="price-line"><div class="price-big">₱11,500<span>/night</span></div><a class="btn btn-ghost btn-sm">View Details</a></div>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="photo p-vigan"><span class="photo-label">Vigan</span></div>
+          <div class="list-body">
+            <b style="font-size:15.5px; font-family:var(--serif);">Villa Angela Heritage House</b>
+            <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">★ 4.5 · Homestay</div>
+            <div class="amenity-row"><span class="amenity">Heritage house</span><span class="amenity">Breakfast</span></div>
+            <div class="price-line"><div class="price-big">₱2,800<span>/night</span></div><a class="btn btn-ghost btn-sm">View Details</a></div>
+          </div>
+        </div>
+        <div class="list-card">
+          <div class="photo p-coron"><span class="photo-label">Coron</span></div>
+          <div class="list-body">
+            <b style="font-size:15.5px; font-family:var(--serif);">Coron Soleil Garden Resort</b>
+            <div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">★ 4.6 · Resort</div>
+            <div class="amenity-row"><span class="amenity">Pool</span><span class="amenity">Airport shuttle</span></div>
+            <div class="price-line"><div class="price-big">₱5,400<span>/night</span></div><a class="btn btn-ghost btn-sm">View Details</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: RESTAURANTS -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-eat">
+    <div class="page-hero">
+      <div class="crumb">Home / <b>Restaurants</b></div>
+      <h1>Discover Filipino food</h1>
+      <p>From street-side carinderias to fine dining — the dishes worth building a trip around.</p>
+    </div>
+    <div class="wrap" style="padding-top:44px;">
+      <div class="quick-chips" style="margin-bottom:30px;">
+        <a class="quick-chip" style="background:var(--ink); color:#fff;">All cuisines</a>
+        <a class="quick-chip">Filipino</a>
+        <a class="quick-chip">Seafood</a>
+        <a class="quick-chip">Street food</a>
+        <a class="quick-chip">Fine dining</a>
+        <a class="quick-chip">Cafés</a>
+      </div>
+      <div class="eyebrow-row"><h3 style="font-size:20px;">Dishes to try</h3></div>
+      <div class="card-grid" style="margin-bottom:56px;">
+        <div class="dest-card"><div class="photo p-food"><span class="photo-label">Adobo</span></div><div class="dest-body"><div class="dest-name">Adobo</div><p class="dest-desc">Pork or chicken braised in vinegar, soy sauce, garlic, and bay leaf.</p></div></div>
+        <div class="dest-card"><div class="photo p-food"><span class="photo-label">Sinigang</span></div><div class="dest-body"><div class="dest-name">Sinigang</div><p class="dest-desc">A sour tamarind-based soup with pork, shrimp, or fish and vegetables.</p></div></div>
+        <div class="dest-card"><div class="photo p-food"><span class="photo-label">Lechon</span></div><div class="dest-body"><div class="dest-name">Lechon</div><p class="dest-desc">Whole roasted pig with crackling skin, a centerpiece at celebrations.</p></div></div>
+        <div class="dest-card"><div class="photo p-food"><span class="photo-label">Halo-Halo</span></div><div class="dest-body"><div class="dest-name">Halo-Halo</div><p class="dest-desc">A layered dessert of shaved ice, milk, beans, fruit, and leche flan.</p></div></div>
+      </div>
+      <div class="eyebrow-row"><h3 style="font-size:20px;">Restaurants near you</h3></div>
+      <div class="grid-3">
+        <div class="list-card"><div class="photo p-food"><span class="photo-label">Manila</span></div><div class="list-body"><b style="font-family:var(--serif); font-size:15px;">Sarsa Kitchen + Bar</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Filipino · ★ 4.7 · ₱₱</div></div></div>
+        <div class="list-card"><div class="photo p-food"><span class="photo-label">Cebu</span></div><div class="list-body"><b style="font-family:var(--serif); font-size:15px;">Larsian BBQ</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Street food, BBQ · ★ 4.5 · ₱</div></div></div>
+        <div class="list-card"><div class="photo p-food"><span class="photo-label">El Nido</span></div><div class="list-body"><b style="font-family:var(--serif); font-size:15px;">Altrove Trattoria</b><div style="font-size:12.5px; color:var(--ink-soft); margin-top:4px;">Fine dining, Italian · ★ 4.6 · ₱₱₱</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: TRAVEL GUIDES -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-guides">
+    <div class="page-hero">
+      <div class="crumb">Home / <b>Travel Guides</b></div>
+      <h1>Travel guides</h1>
+      <p>Editorial guides written by people who've actually made the trip.</p>
+    </div>
+    <div class="wrap" style="padding-top:44px;">
+      <div class="guide-grid">
+        <div class="guide-card feature">
+          <div class="photo p-elnido"><span class="guide-tag">Beaches</span><div class="guide-title">10 best beaches in the Philippines, from Palawan to Siargao</div></div>
+        </div>
+        <div class="guide-card">
+          <div class="photo p-coron"><span class="guide-tag">First-timers</span><div class="guide-title">A first-time traveler's guide to Palawan</div></div>
+        </div>
+        <div class="guide-card">
+          <div class="photo p-vigan"><span class="guide-tag">Culture</span><div class="guide-title">Best places to visit in the Philippines this year</div></div>
+        </div>
+        <div class="guide-card">
+          <div class="photo p-food"><span class="guide-tag">Food</span><div class="guide-title">Philippine food you should try at least once</div></div>
+        </div>
+        <div class="guide-card">
+          <div class="photo p-banaue"><span class="guide-tag">Budget</span><div class="guide-title">A budget travel guide to the Philippines</div></div>
+        </div>
+      </div>
+      <div class="eyebrow-row" style="margin-top:56px;"><h3 style="font-size:20px;">More guides</h3></div>
+      <div class="card-grid">
+        <div class="dest-card"><div class="photo p-manila"><span class="photo-label">Getting Around</span></div><div class="dest-body"><div class="dest-name">How to travel around the Philippines</div><p class="dest-desc">Flights, ferries, and van transfers between islands, explained.</p></div></div>
+        <div class="dest-card"><div class="photo p-siargao"><span class="photo-label">Surfing</span></div><div class="dest-body"><div class="dest-name">Where to learn to surf in Siargao</div><p class="dest-desc">The best breaks for beginners, and where the pros go.</p></div></div>
+        <div class="dest-card"><div class="photo p-bohol"><span class="photo-label">Wildlife</span></div><div class="dest-body"><div class="dest-name">Spotting tarsiers responsibly in Bohol</div><p class="dest-desc">A guide to ethical wildlife sanctuaries worth visiting.</p></div></div>
+        <div class="dest-card"><div class="photo p-boracay"><span class="photo-label">Festivals</span></div><div class="dest-body"><div class="dest-name">A calendar of Philippine festivals</div><p class="dest-desc">Sinulog, Ati-Atihan, Pahiyas, and more, month by month.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: TRIP PLANNER -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-planner">
+    <div class="page-hero">
+      <div class="crumb">My Trips / <b>Palawan Adventure</b></div>
+      <h1>Plan your Philippine adventure</h1>
+      <p>Build a day-by-day itinerary and we'll estimate the budget as you go.</p>
+    </div>
+    <div class="planner-layout">
+      <div>
+        <div class="day-block">
+          <div class="day-dot">1</div>
+          <div class="day-title">Day 1 — Arrival</div>
+          <div class="day-sub">Tuesday, Oct 14</div>
+          <div class="activity-row"><div class="activity-time">10:30 AM</div><div><div class="activity-name">Airport → Hotel</div><div class="activity-note">Private van transfer, 45 min</div></div><div class="activity-cost">₱600</div></div>
+          <div class="activity-row"><div class="activity-time">1:00 PM</div><div><div class="activity-name">Hotel check-in</div><div class="activity-note">Cauayan Eco Lodge</div></div><div class="activity-cost">₱6,200</div></div>
+          <div class="activity-row"><div class="activity-time">7:00 PM</div><div><div class="activity-name">Dinner — Artcafe El Nido</div><div class="activity-note">Filipino, seafood</div></div><div class="activity-cost">₱750</div></div>
+          <button class="add-activity">+ Add activity</button>
+        </div>
+        <div class="day-block">
+          <div class="day-dot">2</div>
+          <div class="day-title">Day 2 — Island Adventure</div>
+          <div class="day-sub">Wednesday, Oct 15</div>
+          <div class="activity-row"><div class="activity-time">7:00 AM</div><div><div class="activity-name">Island hopping — Tour A</div><div class="activity-note">Big &amp; Small Lagoon, Secret Beach</div></div><div class="activity-cost">₱1,200</div></div>
+          <div class="activity-row"><div class="activity-time">12:30 PM</div><div><div class="activity-name">Snorkeling at Shimizu Island</div><div class="activity-note">Included in tour</div></div><div class="activity-cost">—</div></div>
+          <div class="activity-row"><div class="activity-time">5:30 PM</div><div><div class="activity-name">Beach sunset</div><div class="activity-note">Las Cabanas Beach</div></div><div class="activity-cost">₱150</div></div>
+          <button class="add-activity">+ Add activity</button>
+        </div>
+        <div class="day-block">
+          <div class="day-dot">3</div>
+          <div class="day-title">Day 3 — Taraw Cliff &amp; Departure</div>
+          <div class="day-sub">Thursday, Oct 16</div>
+          <div class="activity-row"><div class="activity-time">6:00 AM</div><div><div class="activity-name">Taraw Cliff trek</div><div class="activity-note">Sunrise hike, 2 hours</div></div><div class="activity-cost">₱300</div></div>
+          <div class="activity-row"><div class="activity-time">2:00 PM</div><div><div class="activity-name">Hotel → Airport</div><div class="activity-note">Van transfer</div></div><div class="activity-cost">₱600</div></div>
+          <button class="add-activity">+ Add activity</button>
+        </div>
+      </div>
+      <aside class="sticky-card">
+        <h4 style="font-size:15px; margin-bottom:14px;">Trip summary</h4>
+        <ul class="info-list">
+          <li><b>Destination</b> El Nido, Palawan</li>
+          <li><b>Dates</b> Oct 14 – 16, 2026</li>
+          <li><b>Travelers</b> 2 adults</li>
+        </ul>
+        <div style="margin-top:18px;">
+          <div class="budget-row"><span>Accommodation</span><span>₱6,200</span></div>
+          <div class="budget-row"><span>Transport</span><span>₱1,200</span></div>
+          <div class="budget-row"><span>Activities</span><span>₱1,650</span></div>
+          <div class="budget-row"><span>Food</span><span>₱750</span></div>
+          <div class="budget-row total"><span>Estimated total</span><span>₱9,800</span></div>
+        </div>
+        <button class="btn btn-primary" style="width:100%; margin-top:20px;">Save itinerary</button>
+        <button class="btn btn-ghost" style="width:100%; margin-top:10px;">Share trip</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: USER DASHBOARD -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-dashboard">
+    <div class="dash-shell">
+      <aside class="dash-side">
+        <div class="dash-profile">
+          <div class="dash-avatar photo p-avatar"></div>
+          <div><div class="dash-name">Maria Santos</div><div class="dash-sub">maria@email.com</div></div>
+        </div>
+        <a class="dash-link active">My Trips</a>
+        <a class="dash-link">Saved Destinations</a>
+        <a class="dash-link">Favorite Experiences</a>
+        <a class="dash-link">Recent Searches</a>
+        <a class="dash-link">Bookings</a>
+        <a class="dash-link">Reviews</a>
+      </aside>
+      <main class="dash-main">
+        <div class="welcome-banner">
+          <div>
+            <h2>Welcome back, Maria!</h2>
+            <p>You have 1 upcoming trip and 12 saved destinations waiting for you.</p>
+          </div>
+          <button class="btn btn-gold">+ Plan a new trip</button>
+        </div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Trips planned</div></div>
+          <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Saved destinations</div></div>
+          <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">Favorite experiences</div></div>
+          <div class="stat-card"><div class="stat-num">5</div><div class="stat-label">Reviews written</div></div>
+        </div>
+        <div class="eyebrow-row"><h3 style="font-size:19px;">Upcoming &amp; past trips</h3></div>
+        <div class="trip-row">
+          <div class="trip-card">
+            <div class="photo p-elnido"></div>
+            <div class="trip-body">
+              <span class="status-pill">Upcoming</span>
+              <div style="font-family:var(--serif); font-weight:600; margin-top:8px;">Palawan Adventure</div>
+              <div class="trip-dates">Oct 14 – 16, 2026 · 2 travelers</div>
+            </div>
+          </div>
+          <div class="trip-card">
+            <div class="photo p-bohol"></div>
+            <div class="trip-body">
+              <span class="status-pill" style="background:var(--sand-deep); color:var(--ink-soft);">Completed</span>
+              <div style="font-family:var(--serif); font-weight:600; margin-top:8px;">Bohol Weekend</div>
+              <div class="trip-dates">Mar 2 – 4, 2026 · 4 travelers</div>
+            </div>
+          </div>
+          <div class="trip-card">
+            <div class="photo p-siargao"></div>
+            <div class="trip-body">
+              <span class="status-pill" style="background:var(--sand-deep); color:var(--ink-soft);">Completed</span>
+              <div style="font-family:var(--serif); font-weight:600; margin-top:8px;">Siargao Surf Trip</div>
+              <div class="trip-dates">Jan 8 – 12, 2026 · 3 travelers</div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: AUTHENTICATION -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-auth">
+    <div class="auth-shell">
+      <div class="auth-art photo p-hero">
+        <span class="photo-label" style="font-size:20px; font-family:var(--serif); font-weight:600; padding:32px;">Your next island is one search away.</span>
+      </div>
+      <div class="auth-form-wrap">
+        <div class="auth-form">
+          <h2>Welcome back</h2>
+          <p class="lede">Log in to continue planning your Philippine adventure.</p>
+          <div class="field"><label>Email</label><input type="email" placeholder="you@email.com"></div>
+          <div class="field"><label>Password</label><input type="password" placeholder="••••••••"></div>
+          <div class="field-row">
+            <label class="checkbox-row"><input type="checkbox"> Remember me</label>
+            <a class="btn-text" style="font-size:13px;">Forgot password?</a>
+          </div>
+          <button class="btn btn-primary" style="width:100%; margin-top:22px;">Log in</button>
+          <div class="divider-row">or</div>
+          <button class="oauth-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.2s2.7-6.2 6-6.2c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.9 3.1 14.7 2 12 2 6.9 2 2.7 6.1 2.7 11.2S6.9 20.4 12 20.4c6.9 0 9.3-4.8 9.3-7.3 0-.5 0-.9-.1-1.3H12z"/></svg>
+            Continue with Google
+          </button>
+          <p class="switch-line">Don't have an account? <a class="btn-text">Sign up</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: ADMIN DASHBOARD -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-admin">
+    <div class="admin-shell">
+      <aside class="admin-side">
+        <div class="admin-logo">Pinas Travel <span style="font-size:11px; opacity:0.6; font-family:var(--sans);">Admin</span></div>
+        <a class="admin-link active">Dashboard</a>
+        <a class="admin-link">Destinations</a>
+        <a class="admin-link">Attractions</a>
+        <a class="admin-link">Hotels</a>
+        <a class="admin-link">Restaurants</a>
+        <a class="admin-link">Activities</a>
+        <a class="admin-link">Users</a>
+        <a class="admin-link">Reviews</a>
+        <a class="admin-link">Reports</a>
+        <a class="admin-link">Settings</a>
+      </aside>
+      <main class="admin-main">
+        <div class="admin-top">
+          <h2 style="font-size:22px;">Dashboard overview</h2>
+          <button class="btn btn-primary btn-sm">+ Add Destination</button>
+        </div>
+        <div class="admin-stat-row">
+          <div class="admin-stat"><div class="num">48,203</div><div class="lbl">Total Users</div><div class="delta">▲ 8.2% this month</div></div>
+          <div class="admin-stat"><div class="num">312</div><div class="lbl">Total Destinations</div><div class="delta">▲ 3.1% this month</div></div>
+          <div class="admin-stat"><div class="num">9,847</div><div class="lbl">Total Bookings</div><div class="delta">▲ 12.6% this month</div></div>
+          <div class="admin-stat"><div class="num">1,204</div><div class="lbl">Active Listings</div><div class="delta">▲ 1.4% this month</div></div>
+        </div>
+        <div class="admin-panels">
+          <div class="panel">
+            <h4>Bookings, last 6 months</h4>
+            <div class="bar-chart">
+              <div class="bar" style="height:40%;"><span>May</span></div>
+              <div class="bar" style="height:55%;"><span>Jun</span></div>
+              <div class="bar" style="height:48%;"><span>Jul</span></div>
+              <div class="bar" style="height:70%;"><span>Aug</span></div>
+              <div class="bar" style="height:62%;"><span>Sep</span></div>
+              <div class="bar" style="height:88%;"><span>Oct</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h4>Popular destinations</h4>
+            <table class="admin-table">
+              <tr><th>Destination</th><th>Bookings</th></tr>
+              <tr><td><div class="row-dest"><div class="row-thumb photo p-elnido"></div>El Nido</div></td><td>2,140</td></tr>
+              <tr><td><div class="row-dest"><div class="row-thumb photo p-boracay"></div>Boracay</div></td><td>1,988</td></tr>
+              <tr><td><div class="row-dest"><div class="row-thumb photo p-siargao"></div>Siargao</div></td><td>1,502</td></tr>
+              <tr><td><div class="row-dest"><div class="row-thumb photo p-bohol"></div>Bohol</div></td><td>1,110</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:20px;">
+          <h4>Recent reviews needing moderation</h4>
+          <table class="admin-table">
+            <tr><th>User</th><th>Destination</th><th>Rating</th><th>Status</th></tr>
+            <tr><td>J. Reyes</td><td>El Nido</td><td>★★★★★</td><td><span class="tag-status active">Approved</span></td></tr>
+            <tr><td>A. Cruz</td><td>Coron</td><td>★★★☆☆</td><td><span class="tag-status pending">Pending</span></td></tr>
+            <tr><td>M. Lopez</td><td>Siargao</td><td>★★★★☆</td><td><span class="tag-status active">Approved</span></td></tr>
+          </table>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: MOBILE -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-mobile">
+    <div class="page-hero">
+      <div class="crumb">Home / <b>Mobile Screens</b></div>
+      <h1>Mobile responsive design</h1>
+      <p>Bottom tab navigation (Home, Explore, Trips, Favorites, Profile) with cards and search optimized for small screens.</p>
+    </div>
+    <div class="mobile-strip">
+      <div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-topbar">
+              <span style="font-family:var(--serif); font-weight:600; font-size:15px;">Pinas Travel</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#17302B" stroke-width="1.6"/></svg>
+            </div>
+            <div class="phone-hero photo p-hero">
+              <span class="photo-label" style="font-size:16px; font-family:var(--serif); padding:16px;">Discover the Philippines</span>
+            </div>
+            <div class="phone-search"><div class="sf">WHERE TO</div><div style="font-weight:700; font-size:13px; margin-top:2px;">Search destinations</div></div>
+            <div class="phone-body">
+              <div style="font-weight:700; font-size:13px; margin-bottom:10px;">Popular destinations</div>
+              <div class="phone-cards">
+                <div class="phone-card"><div class="photo p-elnido"></div><div class="pc-body"><b style="font-size:12px;">El Nido</b><div style="font-size:10.5px; color:var(--ink-soft);">★ 4.9</div></div></div>
+                <div class="phone-card"><div class="photo p-boracay"></div><div class="pc-body"><b style="font-size:12px;">Boracay</b><div style="font-size:10.5px; color:var(--ink-soft);">★ 4.7</div></div></div>
+              </div>
+              <div class="phone-cat-grid">
+                <div class="phone-cat">🏝 Beaches</div><div class="phone-cat">🏔 Mountains</div><div class="phone-cat">🍜 Food</div><div class="phone-cat">🏨 Stays</div>
+              </div>
+            </div>
+            <div class="phone-tabbar">
+              <div class="phone-tab active">Home</div><div class="phone-tab">Explore</div><div class="phone-tab">Trips</div><div class="phone-tab">Favorites</div><div class="phone-tab">Profile</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">Home</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-topbar">
+              <span style="font-family:var(--serif); font-weight:600; font-size:15px;">El Nido</span>
+              <span style="font-size:11px; font-weight:700; color:var(--gold);">+ Add to Trip</span>
+            </div>
+            <div class="phone-hero photo p-elnido" style="height:200px;"></div>
+            <div class="phone-body">
+              <b style="font-size:15px; font-family:var(--serif);">El Nido, Palawan</b>
+              <div style="font-size:11.5px; color:var(--ink-soft); margin-top:4px;">★ 4.9 (2,340 reviews)</div>
+              <p style="font-size:11.5px; color:var(--ink-soft); margin-top:10px;">Limestone cliffs, hidden lagoons, and island-hopping across the Bacuit archipelago.</p>
+              <div style="display:flex; gap:8px; margin-top:14px;">
+                <div class="amenity">Best: Nov–May</div><div class="amenity">₱4,500/day</div>
+              </div>
+            </div>
+            <div class="phone-tabbar">
+              <div class="phone-tab">Home</div><div class="phone-tab active">Explore</div><div class="phone-tab">Trips</div><div class="phone-tab">Favorites</div><div class="phone-tab">Profile</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">Destination Details</div>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-topbar">
+              <span style="font-family:var(--serif); font-weight:600; font-size:15px;">My Trips</span>
+            </div>
+            <div class="phone-body">
+              <div class="phone-card" style="width:100%; margin-bottom:12px;"><div class="photo p-elnido" style="height:110px;"></div><div class="pc-body"><span class="status-pill">Upcoming</span><b style="display:block; font-size:13px; margin-top:6px;">Palawan Adventure</b><div style="font-size:10.5px; color:var(--ink-soft);">Oct 14–16</div></div></div>
+              <div class="phone-card" style="width:100%;"><div class="photo p-bohol" style="height:110px;"></div><div class="pc-body"><span class="status-pill" style="background:var(--sand-deep); color:var(--ink-soft);">Completed</span><b style="display:block; font-size:13px; margin-top:6px;">Bohol Weekend</b><div style="font-size:10.5px; color:var(--ink-soft);">Mar 2–4</div></div></div>
+            </div>
+            <div class="phone-tabbar">
+              <div class="phone-tab">Home</div><div class="phone-tab">Explore</div><div class="phone-tab active">Trips</div><div class="phone-tab">Favorites</div><div class="phone-tab">Profile</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">My Trips</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN: DESIGN SYSTEM -->
+  <!-- ============================================================ -->
+  <section class="screen" id="screen-ds">
+    <div class="page-hero">
+      <div class="crumb">Home / <b>Design System</b></div>
+      <h1>Design system</h1>
+      <p>Tropical Filipino visual identity — ocean blue, sky blue, gold, tropical green — built on Fraunces &amp; Plus Jakarta Sans.</p>
+    </div>
+    <div class="wrap" style="padding-top:44px;">
+      <h3 style="font-size:19px; margin-bottom:18px;">Color</h3>
+      <div class="ds-swatch-row" style="margin-bottom:48px;">
+        <div class="swatch"><div class="swatch-color" style="background:var(--lagoon-deep);"></div><div class="swatch-name">Lagoon Deep</div><div class="swatch-hex">#0A3D4C</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:var(--lagoon);"></div><div class="swatch-name">Lagoon</div><div class="swatch-hex">#1C8FAE</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:var(--gold);"></div><div class="swatch-name">Gold Hour</div><div class="swatch-hex">#E9A23B</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:var(--palm);"></div><div class="swatch-name">Palm</div><div class="swatch-hex">#2F9E6E</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:var(--sand); border:1px solid var(--line);"></div><div class="swatch-name">Sand</div><div class="swatch-hex">#FAF6EC</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:var(--ink);"></div><div class="swatch-name">Ink</div><div class="swatch-hex">#17302B</div></div>
+      </div>
+
+      <h3 style="font-size:19px; margin-bottom:6px;">Typography</h3>
+      <div style="margin-bottom:48px;">
+        <div class="type-row"><span class="label">Display XL</span><span style="font-family:var(--serif); font-size:44px; font-weight:700;">Discover Palawan</span></div>
+        <div class="type-row"><span class="label">Heading H1</span><span style="font-family:var(--serif); font-size:32px; font-weight:700;">Plan your adventure</span></div>
+        <div class="type-row"><span class="label">Heading H3</span><span style="font-family:var(--serif); font-size:21px; font-weight:600;">Featured experiences</span></div>
+        <div class="type-row"><span class="label">Body M</span><span style="font-size:16px;">Explore breathtaking destinations across the Philippines.</span></div>
+        <div class="type-row"><span class="label">Label</span><span style="font-size:13px; font-weight:700;">Best time to visit</span></div>
+      </div>
+
+      <h3 style="font-size:19px; margin-bottom:16px;">Buttons</h3>
+      <div class="comp-row" style="margin-bottom:48px;">
+        <button class="btn btn-primary">Search destinations</button>
+        <button class="btn btn-gold">+ Add to Trip</button>
+        <button class="btn btn-ghost">View Details</button>
+        <span class="btn-text">Explore all →</span>
+      </div>
+
+      <h3 style="font-size:19px; margin-bottom:16px;">Tags &amp; chips</h3>
+      <div class="comp-row" style="margin-bottom:48px;">
+        <span class="quick-chip">Palawan</span>
+        <span class="amenity">Free Wi-Fi</span>
+        <span class="status-pill">Upcoming</span>
+        <span class="tag-status active">Approved</span>
+        <span class="tag-status pending">Pending</span>
+      </div>
+
+      <h3 style="font-size:19px; margin-bottom:16px;">Cards</h3>
+      <div class="card-grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:20px;">
+        <div class="dest-card"><div class="photo p-elnido"><span class="photo-label">Card example</span></div><div class="dest-body"><div class="dest-name">Destination Card</div><p class="dest-desc">Used across Home, Explore and Destinations.</p></div></div>
+        <div class="list-card"><div class="photo p-boracay"></div><div class="list-body"><b>Listing Card</b><div style="font-size:12px; color:var(--ink-soft); margin-top:4px;">Used for hotels &amp; restaurants.</div></div></div>
+        <div class="exp-card"><div class="photo p-siargao"></div><div class="exp-body"><div class="exp-loc">Category</div><div class="exp-title">Experience Card</div></div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const navButtons = document.querySelectorAll('#screenNav button');
+  const screens = document.querySelectorAll('.screen');
+  const siteHeader = document.getElementById('siteHeader');
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      navButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = 'screen-' + btn.dataset.screen;
+      screens.forEach(s => s.classList.toggle('active', s.id === target));
+      siteHeader.style.display = btn.dataset.screen === 'home' ? 'flex' : 'none';
+      document.querySelector('.app').scrollIntoView({behavior:'instant'});
+      window.scrollTo(0,0);
+    });
+  });
+
+  // Region tabs on Home
+  document.querySelectorAll('.region-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const region = tab.dataset.region;
+      document.querySelectorAll('.region-tab').forEach(t => t.classList.toggle('active', t === tab));
+      document.querySelectorAll('.region-places').forEach(p => p.classList.toggle('active', p.dataset.region === region));
+    });
+  });
+</script>
+
+</body>
+</html>
